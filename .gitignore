@@ -6,7 +6,6 @@
 
 # Directorios generados por Maven
 target/
-build/
 
 # Archivos temporales de compilación
 *.log
