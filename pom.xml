@@ -9,15 +9,16 @@
   <url>http://maven.apache.org</url>
   
   <properties>
-    <maven.compiler.target>1.17</maven.compiler.target>
-    <maven.compiler.source>1.17</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
     <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>5.8.2</version>
+        <version>5.11.4</version>
         <scope>test</scope>
     </dependency>
   </dependencies>
