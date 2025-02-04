@@ -12,7 +12,6 @@ public class LibraryTest {
     public void shouldAddNewBookToSystem() {
         // Crear instancias de prueba
         Book book1 = new Book("La guerra de los mundos", "H.G. Wells", "1");
-        Book book2 = new Book("Harry Potter y la piedra filosofal", "J.K. Rowling", "2");
         Library biblioteca = new Library();
 
         // Agregar libro a la biblioteca
@@ -29,5 +28,23 @@ public class LibraryTest {
         assertThrows(IllegalArgumentException.class, () -> {
             biblioteca.addBook(null);
         });
+    }
+
+    @Test
+    public void shouldAddBookExistInTheSystem() {
+        // Crear instancias de prueba
+        Library biblioteca = new Library();
+        Book book1 = new Book("La guerra de los mundos", "H.G. Wells", "1");
+        
+        boolean result1 = biblioteca.addBook(book1);
+        boolean result2 = biblioteca.addBook(book1); 
+        boolean result = result1 && result2;
+
+        assertTrue(result);
+
+        Map<Book, Integer> books = biblioteca.getBooks();
+        Integer numBooks = books.get(book1); 
+        
+        assertTrue(numBooks != null && numBooks == 2);
     }
 }
