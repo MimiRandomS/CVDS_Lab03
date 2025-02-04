@@ -34,10 +34,24 @@ public class Library {
      *
      * @return true if the book was stored false otherwise.
      */
-    public boolean addBook(Book book) {
-        //TODO Implement the logic to add a new book into the map.
-<span class="fc" id="L39">        return false;</span>
+    public boolean addBook(Book book) throws IllegalArgumentException {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (book == null) {</span>
+<span class="fc" id="L39">            throw new IllegalArgumentException(&quot;La función no permite un tipo de book nulo&quot;);</span>
+        }
+
+        try {
+<span class="fc bfc" id="L43" title="All 2 branches covered.">            if (this.books.containsKey(book)) {</span>
+<span class="fc" id="L44">                this.books.put(book, this.books.get(book) + 1);</span>
+            } else {
+<span class="fc" id="L46">                this.books.put(book, 1);</span>
+            }
+<span class="fc" id="L48">            return true;</span>
+<span class="nc" id="L49">        } catch (Exception e) {</span>
+<span class="nc" id="L50">            return false;</span>
+        }
     }
+
+
 
     /**
      * This method creates a new loan with for the User identify by the userId and the book identify by the isbn,
@@ -54,7 +68,7 @@ public class Library {
      */
     public Loan loanABook(String userId, String isbn) {
         //TODO Implement the login of loan a book to a user based on the UserId and the isbn.
-<span class="nc" id="L57">        return null;</span>
+<span class="nc" id="L71">        return null;</span>
     }
 
     /**
@@ -68,15 +82,15 @@ public class Library {
      */
     public Loan returnLoan(Loan loan) {
         //TODO Implement the login of loan a book to a user based on the UserId and the isbn.
-<span class="nc" id="L71">        return null;</span>
+<span class="nc" id="L85">        return null;</span>
     }
 
     public boolean addUser(User user) {
-<span class="nc" id="L75">        return users.add(user);</span>
+<span class="nc" id="L89">        return users.add(user);</span>
     }
 
     public Map&lt;Book, Integer&gt; getBooks(){
-<span class="nc" id="L79">        return this.books;</span>
+<span class="fc" id="L93">        return this.books;</span>
     }
 
 }
