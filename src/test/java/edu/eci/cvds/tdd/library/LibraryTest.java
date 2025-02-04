@@ -2,10 +2,9 @@ package edu.eci.cvds.tdd.library;
 
 import edu.eci.cvds.tdd.library.Library;
 import edu.eci.cvds.tdd.library.book.Book;
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LibraryTest { 
 
@@ -26,8 +25,9 @@ public class LibraryTest {
         // Crear instancias de prueba
         Library biblioteca = new Library();
 
-        // Agregar null a la biblioteca
-        boolean result = biblioteca.addBook(null);
-        assertFalse(result);
+        // prueba error
+        assertThrows(IllegalArgumentException.class, () -> {
+            biblioteca.addBook(null);
+        });
     }
 }
