@@ -57,8 +57,8 @@ public class LibraryTest {
         assertThrows(IllegalArgumentException.class, () -> {
             library.loanABook(userId, bookIsbn);
         });
-    }    
-
+    } 
+    
     /*  
      * Pruebas para el método addBook
      */
