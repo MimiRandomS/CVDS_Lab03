@@ -5,7 +5,8 @@
 .vscode/
 
 # Directorios generados por Maven
-target/
+target/*
+!target/site/
 
 # Archivos temporales de compilación
 *.log

@@ -1,13 +1,15 @@
 package edu.eci.cvds.tdd.library;
 
-import edu.eci.cvds.tdd.library.book.Book;
-import edu.eci.cvds.tdd.library.loan.Loan;
-import edu.eci.cvds.tdd.library.user.User;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.eci.cvds.tdd.library.book.Book;
+import edu.eci.cvds.tdd.library.loan.Loan;
+import edu.eci.cvds.tdd.library.loan.LoanStatus;
+import edu.eci.cvds.tdd.library.user.User;
 
 /**
  * Library responsible for manage the loans and the users.
@@ -34,10 +36,24 @@ public class Library {
      *
      * @return true if the book was stored false otherwise.
      */
-    public boolean addBook(Book book) {
-        //TODO Implement the logic to add a new book into the map.
-        return false;
+    public boolean addBook(Book book) throws IllegalArgumentException {
+        if (book == null) {
+            throw new IllegalArgumentException("La función no permite un tipo de book nulo");
+        }
+
+        try {
+            if (this.books.containsKey(book)) {
+                this.books.put(book, this.books.get(book) + 1);
+            } else {
+                this.books.put(book, 1);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
+
+
 
     /**
      * This method creates a new loan with for the User identify by the userId and the book identify by the isbn,
@@ -52,10 +68,61 @@ public class Library {
      *
      * @return The new created loan.
      */
-    public Loan loanABook(String userId, String isbn) {
-        //TODO Implement the login of loan a book to a user based on the UserId and the isbn.
-        return null;
+   public Loan loanABook(String userId, String isbn) {
+    // Buscar al usuario por su ID
+    User user = null;
+    for (User u : users) {
+        if (u.getId().equals(userId)) {
+            user = u;
+            break;
+        }
     }
+    
+    if (user == null) {
+        throw new IllegalArgumentException("User does not exist.");
+    }
+
+    // Buscar el libro por su ISBN
+    Book book = null;
+    for (Book b : books.keySet()) {
+        if (b.getIsbn().equals(isbn)) {
+            book = b;
+            break;
+        }
+    }
+
+    if (book == null) {
+        throw new IllegalArgumentException("Book not found.");
+    }
+
+    // Verificar si hay copias disponibles del libro
+    Integer availableCopies = books.get(book);
+    if (availableCopies == null || availableCopies <= 0) {
+        throw new IllegalArgumentException("Book not available.");
+    }
+
+    // Verificar si el usuario ya tiene un préstamo activo del mismo libro
+    for (Loan loan : loans) {
+        if (loan.getUser().getId().equals(userId) && loan.getBook().getIsbn().equals(isbn) && loan.getStatus() == LoanStatus.ACTIVE) {
+            throw new IllegalArgumentException("User has already borrowed this book.");
+        }
+    }
+
+    // Crear un nuevo préstamo
+    Loan newLoan = new Loan();
+    newLoan.setUser(user);
+    newLoan.setBook(book);
+    newLoan.setLoanDate(LocalDateTime.now());
+    newLoan.setStatus(LoanStatus.ACTIVE);
+    
+    // Actualizar la disponibilidad del libro
+    books.put(book, availableCopies - 1);
+
+    // Agregar el préstamo a la lista de préstamos
+    loans.add(newLoan);
+
+    return newLoan;
+}
 
     /**
      * This method return a loan, meaning that the amount of books should be increased by 1, the status of the Loan
@@ -73,6 +140,10 @@ public class Library {
 
     public boolean addUser(User user) {
         return users.add(user);
+    }
+
+    public Map<Book, Integer> getBooks(){
+        return this.books;
     }
 
 }
