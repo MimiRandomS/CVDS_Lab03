@@ -1,13 +1,16 @@
 package edu.eci.cvds.tdd.library;
 
-import java.util.Map;
-import edu.eci.cvds.tdd.library.Library;
 import edu.eci.cvds.tdd.library.book.Book;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class LibraryTest { 
+
+    /*  
+     * Pruebas para el método addBook
+     */
 
     @Test
     public void shouldAddNewBookToSystem() {
@@ -48,4 +51,10 @@ public class LibraryTest {
         
         assertTrue(numBooks != null && numBooks == 2);
     }
+
+    /*  
+     * Pruebas para el método returnLoan
+     */
+
+
 }
