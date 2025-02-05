@@ -1,31 +1,81 @@
 package edu.eci.cvds.tdd.library;
 
-import java.util.Map;
-import edu.eci.cvds.tdd.library.Library;
 import edu.eci.cvds.tdd.library.book.Book;
-import org.junit.jupiter.api.Test;
+import edu.eci.cvds.tdd.library.loan.Loan;
+import edu.eci.cvds.tdd.library.loan.LoanStatus;
+import edu.eci.cvds.tdd.library.user.User;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LibraryTest { 
+    private Library library;
+
+    @Before
+    public void setUp() {
+        library = new Library();
+    }
+  
+    /*  
+     * Pruebas para el método loanABook
+     */
 
     @Test
+    public void shouldCreateLoanSuccessfullyWhenBookIsAvailable() {
+        Book book = new Book("El Quijote", "Miguel de Cervantes", "hola");
+        User user = new User();
+        user.setId("user1");
+        user.setName("Juan Pérez");
+
+        library.addBook(book);
+
+        String userId = user.getId();
+        String bookIsbn = book.getIsbn();
+
+        Loan loan = library.loanABook(userId, bookIsbn);
+
+        // Validar que el préstamo se haya creado correctamente
+        Assert.assertNotNull(loan);
+        Assert.assertEquals(LoanStatus.ACTIVE, loan.getStatus());
+        Assert.assertEquals(userId, loan.getUser().getId()); 
+        Assert.assertEquals(bookIsbn, loan.getBook().getIsbn());  
+        Assert.assertNotNull(loan.getLoanDate());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenBookIsNotAvailable() {
+        Book book = new Book("El Quijote", "Miguel de Cervantes", "hola");
+        User user = new User();
+        user.setId("user2");
+        user.setName("Ana Gómez");
+
+        String userId = user.getId();
+        String bookIsbn = book.getIsbn();
+
+        library.loanABook(userId, bookIsbn);  // Lanza excepción porque el libro no está en la biblioteca
+    }
+
+    /*  
+     * Pruebas para el método addBook
+     */
+      
+    @Test
     public void shouldAddNewBookToSystem() {
-        // Crear instancias de prueba
         Book book1 = new Book("La guerra de los mundos", "H.G. Wells", "1");
         Library biblioteca = new Library();
 
-        // Agregar libro a la biblioteca
         boolean result = biblioteca.addBook(book1);
         assertTrue(result);
     }
 
     @Test
     public void shouldNotAddNewBookNullValueToSystem() {
-        // Crear instancias de prueba
         Library biblioteca = new Library();
 
-        // prueba error
         assertThrows(IllegalArgumentException.class, () -> {
             biblioteca.addBook(null);
         });
@@ -33,7 +83,6 @@ public class LibraryTest {
 
     @Test
     public void shouldAddBookExistInTheSystem() {
-        // Crear instancias de prueba
         Library biblioteca = new Library();
         Book book1 = new Book("La guerra de los mundos", "H.G. Wells", "1");
         
