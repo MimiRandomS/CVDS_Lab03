@@ -18,11 +18,11 @@ public class Library {
     private final Map&lt;Book, Integer&gt; books;
     private final List&lt;Loan&gt; loans;
 
-<span class="fc" id="L21">    public Library() {</span>
-<span class="fc" id="L22">        users = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L23">        books = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L24">        loans = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L25">    }</span>
+<span class="nc" id="L21">    public Library() {</span>
+<span class="nc" id="L22">        users = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L23">        books = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L24">        loans = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L25">    }</span>
 
     /**
      * Adds a new {@link edu.eci.cvds.tdd.library.book.Book} into the system, the book is store in a Map that contains
@@ -35,17 +35,17 @@ public class Library {
      * @return true if the book was stored false otherwise.
      */
     public boolean addBook(Book book) throws IllegalArgumentException {
-<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (book == null) {</span>
-<span class="fc" id="L39">            throw new IllegalArgumentException(&quot;La función no permite un tipo de book nulo&quot;);</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (book == null) {</span>
+<span class="nc" id="L39">            throw new IllegalArgumentException(&quot;La función no permite un tipo de book nulo&quot;);</span>
         }
 
         try {
-<span class="fc bfc" id="L43" title="All 2 branches covered.">            if (this.books.containsKey(book)) {</span>
-<span class="fc" id="L44">                this.books.put(book, this.books.get(book) + 1);</span>
-<span class="fc" id="L45">            } else {</span>
-<span class="fc" id="L46">                this.books.put(book, 1);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            if (this.books.containsKey(book)) {</span>
+<span class="nc" id="L44">                this.books.put(book, this.books.get(book) + 1);</span>
+<span class="nc" id="L45">            } else {</span>
+<span class="nc" id="L46">                this.books.put(book, 1);</span>
             }
-<span class="fc" id="L48">            return true;</span>
+<span class="nc" id="L48">            return true;</span>
 <span class="nc" id="L49">        } catch (Exception e) {</span>
 <span class="nc" id="L50">            return false;</span>
         }
@@ -90,7 +90,7 @@ public class Library {
     }
 
     public Map&lt;Book, Integer&gt; getBooks(){
-<span class="fc" id="L93">        return this.books;</span>
+<span class="nc" id="L93">        return this.books;</span>
     }
 
 }
