@@ -97,4 +97,9 @@ public class LibraryTest {
         
         assertTrue(numBooks != null && numBooks == 2);
     }
+
+    /*  
+     * Pruebas para el método returnLoan
+     */
 }
+
