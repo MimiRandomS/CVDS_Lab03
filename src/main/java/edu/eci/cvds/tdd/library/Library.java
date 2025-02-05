@@ -34,10 +34,24 @@ public class Library {
      *
      * @return true if the book was stored false otherwise.
      */
-    public boolean addBook(Book book) {
-        //TODO Implement the logic to add a new book into the map.
-        return false;
+    public boolean addBook(Book book) throws IllegalArgumentException {
+        if (book == null) {
+            throw new IllegalArgumentException("La función no permite un tipo de book nulo");
+        }
+
+        try {
+            if (this.books.containsKey(book)) {
+                this.books.put(book, this.books.get(book) + 1);
+            } else {
+                this.books.put(book, 1);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
+
+
 
     /**
      * This method creates a new loan with for the User identify by the userId and the book identify by the isbn,
@@ -73,6 +87,10 @@ public class Library {
 
     public boolean addUser(User user) {
         return users.add(user);
+    }
+
+    public Map<Book, Integer> getBooks(){
+        return this.books;
     }
 
 }
