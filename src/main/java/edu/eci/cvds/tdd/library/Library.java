@@ -65,7 +65,8 @@ public class Library {
      *
      * @return The new created loan.
      */
-   public Loan loanABook(String userId, String isbn) {
+    
+    public Loan loanABook(String userId, String isbn) {
     // Buscar al usuario por su ID
     User user = null;
     for (User u : users) {

@@ -1,15 +1,14 @@
 package edu.eci.cvds.tdd.library;
 
-import java.util.Map;
-import java.time.LocalDateTime;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import edu.eci.cvds.tdd.library.book.Book;
 import edu.eci.cvds.tdd.library.loan.Loan;
 import edu.eci.cvds.tdd.library.loan.LoanStatus;
 import edu.eci.cvds.tdd.library.user.User;
+import java.time.LocalDateTime;
+import java.util.Map;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class LibraryTest {
     private Library library;
@@ -182,6 +181,7 @@ public class LibraryTest {
         User user = new User();
         user.setId("user1");
         user.setName("Juan Pérez");
+        library.addUser(user);
     
         library.addBook(book);
         library.addBook(book);
