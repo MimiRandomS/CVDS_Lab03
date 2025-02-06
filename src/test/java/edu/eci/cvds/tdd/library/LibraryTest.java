@@ -1,11 +1,8 @@
 package edu.eci.cvds.tdd.library;
 
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.LocalDateTime;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,14 +15,11 @@ public class LibraryTest {
     private Library library;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         library = new Library();
     }
 
-    /*
-     * Pruebas para el método loanABook
-     */
-
+    /* Pruebas para el método loanABook */
     @Test
     void shouldCreateLoanSuccessfullyWhenBookIsAvailable() {
         Book book = new Book("El Quijote", "Miguel de Cervantes", "123");
@@ -46,13 +40,11 @@ public class LibraryTest {
         assertEquals(userId, loan.getUser().getId());
         assertEquals(bookIsbn, loan.getBook().getIsbn());
         assertNotNull(loan.getLoanDate());
-
-        // Verificar que el libro se reste del inventario
         assertEquals(Integer.valueOf(0), library.getBooks().get(book));
     }
 
     @Test
-    void shouldThrowExceptionWhenBookIsNotAvailable() {
+    public void shouldThrowExceptionWhenBookIsNotAvailable() {
         Book book = new Book("El Quijote", "Miguel de Cervantes", "123");
         User user = new User();
         user.setId("user2");
@@ -64,20 +56,20 @@ public class LibraryTest {
         String bookIsbn = book.getIsbn();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            library.loanABook(userId, bookIsbn); // No hay copias en la biblioteca, debe fallar
+            library.loanABook(userId, bookIsbn);
         });
     }
 
     @Test
     void shouldThrowExceptionWhenUserDoesNotExist() {
         Book book = new Book("1984", "George Orwell", "456");
-        library.addBook(book); // Se añade el libro, pero no el usuario
+        library.addBook(book);
 
         String userId = "non_existent_user";
         String bookIsbn = book.getIsbn();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            library.loanABook(userId, bookIsbn); // No debería permitir prestar el libro
+            library.loanABook(userId, bookIsbn);
         });
     }
 
@@ -94,10 +86,10 @@ public class LibraryTest {
         String userId = user.getId();
         String bookIsbn = book.getIsbn();
 
-        library.loanABook(userId, bookIsbn); // Primer préstamo exitoso
+        library.loanABook(userId, bookIsbn);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            library.loanABook(userId, bookIsbn); // Segundo préstamo debería fallar
+            library.loanABook(userId, bookIsbn);
         });
     }
 
@@ -115,8 +107,8 @@ public class LibraryTest {
         library.addUser(user1);
         library.addUser(user2);
 
-        library.addBook(book); 
-        library.addBook(book);// Se añaden 2 copias del libro
+        library.addBook(book);
+        library.addBook(book);
 
         Loan loan1 = library.loanABook(user1.getId(), book.getIsbn());
         Loan loan2 = library.loanABook(user2.getId(), book.getIsbn());
@@ -125,52 +117,87 @@ public class LibraryTest {
         assertNotNull(loan2);
         assertEquals(LoanStatus.ACTIVE, loan1.getStatus());
         assertEquals(LoanStatus.ACTIVE, loan2.getStatus());
-
-        // Después de los dos préstamos, no deberían quedar copias disponibles
         assertEquals(Integer.valueOf(0), library.getBooks().get(book));
     }
 
-    /*  
-     * Pruebas para el método addBook
-     */
-      
+    /* Pruebas para el método addBook */
     @Test
     public void shouldAddNewBookToSystem() {
         Book book1 = new Book("La guerra de los mundos", "H.G. Wells", "1");
-        Library biblioteca = new Library();
-
-        boolean result = biblioteca.addBook(book1);
+        boolean result = library.addBook(book1);
         assertTrue(result);
     }
 
     @Test
     public void shouldNotAddNewBookNullValueToSystem() {
-        Library biblioteca = new Library();
-
         assertThrows(IllegalArgumentException.class, () -> {
-            biblioteca.addBook(null);
+            library.addBook(null);
         });
     }
 
     @Test
     public void shouldAddBookExistInTheSystem() {
-        Library biblioteca = new Library();
         Book book1 = new Book("La guerra de los mundos", "H.G. Wells", "1");
-        
-        boolean result1 = biblioteca.addBook(book1);
-        boolean result2 = biblioteca.addBook(book1); 
+        boolean result1 = library.addBook(book1);
+        boolean result2 = library.addBook(book1);
         boolean result = result1 && result2;
 
         assertTrue(result);
 
-        Map<Book, Integer> books = biblioteca.getBooks();
-        Integer numBooks = books.get(book1); 
-        
+        Map<Book, Integer> books = library.getBooks();
+        Integer numBooks = books.get(book1);
+
         assertTrue(numBooks != null && numBooks == 2);
     }
 
-    /*  
-     * Pruebas para el método returnLoan
-     */
-}
+    /* Pruebas para el método returnLoan */
+    @Test
+    public void shouldNotReturnALoanThatDoesNotExist() {
+        Book book = new Book("El Quijote", "Miguel de Cervantes", "hola");
+        User user = new User();
+        user.setId("user1");
+        user.setName("Juan Pérez");
 
+        library.addBook(book);
+        library.addBook(book);
+
+        Loan loan = new Loan();
+        loan.setBook(book);
+        loan.setUser(user);
+        loan.setStatus(LoanStatus.ACTIVE);
+        loan.setLoanDate(LocalDateTime.now());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            library.returnLoan(loan);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            library.returnLoan(null);
+        });
+    }
+
+    @Test
+    public void shouldReturnALoanSuccessfully() {
+        Book book = new Book("El Quijote", "Miguel de Cervantes", "hola");
+        User user = new User();
+        user.setId("user1");
+        user.setName("Juan Pérez");
+    
+        library.addBook(book);
+        library.addBook(book);
+    
+        String userId = user.getId();
+        String bookIsbn = book.getIsbn();
+    
+        Loan loan = library.loanABook(userId, bookIsbn);
+    
+        Loan returnedLoan = library.returnLoan(loan);
+    
+        assertNotNull(returnedLoan);
+        assertEquals(LoanStatus.RETURNED, returnedLoan.getStatus());
+        assertEquals(userId, returnedLoan.getUser().getId());
+        assertEquals(bookIsbn, returnedLoan.getBook().getIsbn());
+        assertNotNull(returnedLoan.getReturnDate());
+        assertEquals(2, library.getBooks().get(book));
+    }
+}

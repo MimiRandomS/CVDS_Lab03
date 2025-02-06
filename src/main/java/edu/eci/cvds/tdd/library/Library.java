@@ -1,15 +1,14 @@
 package edu.eci.cvds.tdd.library;
 
+import edu.eci.cvds.tdd.library.book.Book;
+import edu.eci.cvds.tdd.library.loan.Loan;
+import edu.eci.cvds.tdd.library.loan.LoanStatus;
+import edu.eci.cvds.tdd.library.user.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import edu.eci.cvds.tdd.library.book.Book;
-import edu.eci.cvds.tdd.library.loan.Loan;
-import edu.eci.cvds.tdd.library.loan.LoanStatus;
-import edu.eci.cvds.tdd.library.user.User;
 
 /**
  * Library responsible for manage the loans and the users.
@@ -52,8 +51,6 @@ public class Library {
             return false;
         }
     }
-
-
 
     /**
      * This method creates a new loan with for the User identify by the userId and the book identify by the isbn,
@@ -134,8 +131,21 @@ public class Library {
      * @return the loan with the RETURNED status.
      */
     public Loan returnLoan(Loan loan) {
-        //TODO Implement the login of loan a book to a user based on the UserId and the isbn.
-        return null;
+        if (loan == null) throw new IllegalArgumentException("La función no permite un tipo de loan nulo");
+        if (!loans.contains(loan)) throw new IllegalArgumentException("El préstamo no existe en la lista de préstamos");
+
+        Book book = loan.getBook();
+        this.books.put(book, this.books.get(book) + 1);
+
+        for (int i = 0; i < loans.size(); i++){
+            if (loans.get(i).equals(loan)){
+                loans.get(i).setStatus(LoanStatus.RETURNED);
+                loans.get(i).setReturnDate(LocalDateTime.now());
+                loan.setStatus(LoanStatus.RETURNED);
+                loan.setReturnDate(LocalDateTime.now());
+            }
+        }
+        return loan;
     }
 
     public boolean addUser(User user) {
