@@ -65,10 +65,61 @@ public class Library {
      *
      * @return The new created loan.
      */
-    public Loan loanABook(String userId, String isbn) {
-        //TODO Implement the login of loan a book to a user based on the UserId and the isbn.
-        return null;
+   public Loan loanABook(String userId, String isbn) {
+    // Buscar al usuario por su ID
+    User user = null;
+    for (User u : users) {
+        if (u.getId().equals(userId)) {
+            user = u;
+            break;
+        }
     }
+    
+    if (user == null) {
+        throw new IllegalArgumentException("User does not exist.");
+    }
+
+    // Buscar el libro por su ISBN
+    Book book = null;
+    for (Book b : books.keySet()) {
+        if (b.getIsbn().equals(isbn)) {
+            book = b;
+            break;
+        }
+    }
+
+    if (book == null) {
+        throw new IllegalArgumentException("Book not found.");
+    }
+
+    // Verificar si hay copias disponibles del libro
+    Integer availableCopies = books.get(book);
+    if (availableCopies == null || availableCopies <= 0) {
+        throw new IllegalArgumentException("Book not available.");
+    }
+
+    // Verificar si el usuario ya tiene un préstamo activo del mismo libro
+    for (Loan loan : loans) {
+        if (loan.getUser().getId().equals(userId) && loan.getBook().getIsbn().equals(isbn) && loan.getStatus() == LoanStatus.ACTIVE) {
+            throw new IllegalArgumentException("User has already borrowed this book.");
+        }
+    }
+
+    // Crear un nuevo préstamo
+    Loan newLoan = new Loan();
+    newLoan.setUser(user);
+    newLoan.setBook(book);
+    newLoan.setLoanDate(LocalDateTime.now());
+    newLoan.setStatus(LoanStatus.ACTIVE);
+    
+    // Actualizar la disponibilidad del libro
+    books.put(book, availableCopies - 1);
+
+    // Agregar el préstamo a la lista de préstamos
+    loans.add(newLoan);
+
+    return newLoan;
+}
 
     /**
      * This method return a loan, meaning that the amount of books should be increased by 1, the status of the Loan
